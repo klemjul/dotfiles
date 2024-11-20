@@ -5,9 +5,12 @@ RUN apt-get -y install \
     git \
     zsh \
     curl \
-    stow
+    stow \
+    sudo
 
-RUN useradd -m -s /bin/zsh testuser 
+RUN useradd -m -s /bin/zsh testuser && \
+    echo "testuser:password" | chpasswd
+RUN usermod -aG sudo testuser
 
 USER testuser
 

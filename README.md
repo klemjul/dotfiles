@@ -14,7 +14,13 @@ Quickly set up my dev environment across different machines.
 ```sh
 git clone https://github.com/klemjul/dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
-bash boostrap.sh
+bash bootstrap.sh
+
+mise tasks
+mise run install-languages
+mise run install-tools
+mise run install-vscode
+mise run backup-vscode
 ```
 
 # Testing with Docker

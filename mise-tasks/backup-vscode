@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#MISE description='Backup vscode settings'
+
+SETTINGS_BACKUP="./vscode/settings.json"
+EXTENSIONS_BACKUP="./vscode/extensions.json"
+
+# backup settings
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  cp "$HOME/.config/Code/User/settings.json" $SETTINGS_BACKUP
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  cp "$HOME/Library/Application Support/Code/User/settings.json" $SETTINGS_BACKUP
+else
+  echo "Unsupported OS: $OSTYPE"
+  exit 1
+fi
+echo "VSCode setings have been backed up to $SETTINGS_BACKUP"
+
+# backup extensions
+EXTENSIONS=$(code --list-extensions)
+# Create the JSON array and save it to the backup file
+echo "$EXTENSIONS" | jq -R -s 'split("\n") | map(select(length > 0))' > $EXTENSIONS_BACKUP
+echo "VSCode extensions have been backed up to $EXTENSIONS_BACKUP"
+
+

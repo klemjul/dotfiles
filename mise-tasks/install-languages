@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#MISE description='Install prefered programing languages'
+
+mise use -g go@1.21 node@20 python@3.11
