@@ -2,10 +2,14 @@
 DOTFILES_HOME="$HOME/.dotfiles"
 
 # git config
-stow git
+if [ ! -e "$HOME/.npmrc" ]; then
+    stow git
+else
+    echo "$HOME/.npmrc already installed."
+fi
 
 # install oh my zsh and set .zshrc config
-if [ ! -e "$DOTFILES_HOME/.oh-my-zsh" ]; then
+if [ ! -e "$HOME/.oh-my-zsh" ]; then
     echo "Oh My Zsh is not installed. Installing..."
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     # delete generated configuration
