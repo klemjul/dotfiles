@@ -6,7 +6,7 @@
 [init]
 	defaultBranch = main
 [core]
-	editor = code
+	editor = code --wait
 [commit]
 	gpgSign = true
 [gpg]

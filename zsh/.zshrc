@@ -15,3 +15,7 @@ source $ZSH/oh-my-zsh.sh
 
 export EDITOR='code -w'
 
+# ===== ALIAS =====
+alias tf='terraform'
+
+

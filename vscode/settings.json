@@ -1,11 +1,24 @@
 {
+  // general
   "editor.tabSize": 2,
   "editor.renderWhitespace": "trailing",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always"
-  },
   "telemetry.telemetryLevel": "off",
-  "typescript.updateImportsOnFileMove.enabled": "always"
+
+  // files
+  "files.associations": {
+    ".env*": "properties",
+    "**/*playbook*.{yml,yaml}": "ansible",
+    "**/defaults/*.{yml,yaml}": "ansible",
+    "**/handlers/*.{yml,yaml}": "ansible",
+    "**/meta/*.{yml,yaml}": "ansible",
+    "**/playbooks/*.{yml,yaml}": "ansible",
+    "**/requirements.{yml,yaml}": "ansible",
+    "**/tasks/*.{yml,yaml}": "ansible",
+    "**/vars/*.{yml,yaml}": "ansible",
+    "*.tf": "terraform",
+    "*.yaml.tftpl": "jinja-yaml",
+    "*.j2": "jinja"
+  },
 }

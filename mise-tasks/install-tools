@@ -5,6 +5,7 @@
 PACKAGES=(
   jq
   code
+  age
 )
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
