@@ -1,9 +1,14 @@
 #!/bin/bash
 DOTFILES_HOME="$HOME/.dotfiles"
 
-# git config
-if [ ! -e "$HOME/.npmrc" ]; then
+if [ ! -e "$HOME/.gitconfig" ]; then
     stow git
+else
+    echo "$HOME/.gitconfig already installed."
+fi
+
+if [ ! -e "$HOME/.npmrc" ]; then
+    stow npm
 else
     echo "$HOME/.npmrc already installed."
 fi
