@@ -19,7 +19,7 @@ bash bootstrap.sh
 mise tasks
 mise run install-languages
 mise run install-tools
-mise run install-vscode
+mise run restore-vscode
 mise run backup-vscode
 ```
 

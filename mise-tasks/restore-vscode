@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#MISE description='Install vscode settings backup'
+
+SETTINGS_BACKUP="./vscode/settings.json"
+EXTENSIONS_BACKUP="./vscode/extensions.json"
+
+# extensions
+jq -r '.[]' "$EXTENSIONS_BACKUP" | while read -r extension; do
+  echo "Installing extension: $extension"
+  code --install-extension "$extension"
+done
+echo "$EXTENSIONS_BACKUP vscode extensions have been installed."
+
+# settings
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  cp $SETTINGS_BACKUP "$HOME/.config/Code/User/settings.json"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  cp $SETTINGS_BACKUP "$HOME/Library/Application Support/Code/User/settings.json"
+else
+  echo "Unsupported OS: $OSTYPE"
+  exit 1
+fi
+echo "$SETTINGS_BACKUP vscode config installed."
+
