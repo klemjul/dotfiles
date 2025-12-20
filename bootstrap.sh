@@ -1,17 +1,36 @@
 #!/bin/bash
+
+source utils.sh
+
+OS=$(detect_os)
 DOTFILES_HOME="$HOME/.dotfiles"
+ls $DOTFILES_HOME
+
+
+# Install Homebrew on macOS if not present
+if [ "$OS" = "macos" ] && ! command_exists brew; then
+    echo "Homebrew is not installed. Installing..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+else
+    if [ "$OS" = "macos" ]; then
+        echo "Homebrew is already installed."
+    fi
+fi
+
+install_packages zsh stow git curl
 
 if [ ! -e "$HOME/.gitconfig" ]; then
     stow git
 else
-    echo "$HOME/.gitconfig already installed."
+    echo "$HOME/.gitconfig already present."
 fi
 
 if [ ! -e "$HOME/.npmrc" ]; then
     stow npm
 else
-    echo "$HOME/.npmrc already installed."
+    echo "$HOME/.npmrc already present."
 fi
+
 
 # install oh my zsh and set .zshrc config
 if [ ! -e "$HOME/.oh-my-zsh" ]; then
@@ -22,7 +41,7 @@ if [ ! -e "$HOME/.oh-my-zsh" ]; then
     stow zsh
 
     # oh my zsh plugins
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
 else
     echo "Oh My Zsh is already installed."
 fi

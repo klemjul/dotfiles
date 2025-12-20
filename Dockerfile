@@ -1,14 +1,9 @@
 FROM ubuntu:22.04
 
 RUN apt-get update
-RUN apt-get -y install \
-    git \
-    zsh \
-    curl \
-    stow \
-    sudo
+RUN apt-get -y install sudo
 
-RUN useradd -m -s /bin/zsh testuser && \
+RUN useradd -m -s /bin/bash testuser && \
     echo "testuser:password" | chpasswd
 RUN usermod -aG sudo testuser
 

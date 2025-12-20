@@ -1,0 +1,48 @@
+name: Test Dotfiles
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+jobs:
+  test-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: .dotfiles
+
+      - name: Move to home directory
+        run: mv .dotfiles ~/.dotfiles
+
+      - name: Run bootstrap script
+        run: cd ~/.dotfiles && bash bootstrap.sh
+
+      - name: Install tools
+        run: cd ~/.dotfiles && bash mise-tasks/install-tools
+
+      - name: Validate installation
+        run: cd ~/.dotfiles && bash validate.sh
+
+  test-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          path: .dotfiles
+
+      - name: Move to home directory
+        run: mv .dotfiles ~/.dotfiles
+
+      - name: Run bootstrap script
+        run: cd ~/.dotfiles && bash bootstrap.sh
+
+      - name: Install tools
+        run: cd ~/.dotfiles && bash mise-tasks/install-tools
+
+      - name: Validate installation
+        run: cd ~/.dotfiles && bash validate.sh

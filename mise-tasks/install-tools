@@ -1,60 +1,45 @@
 #!/usr/bin/env bash
 #MISE description='Install packages'
 
-# ist of packages to install
+source utils.sh
+
+OS=$(detect_os)
+
 PACKAGES=(
   jq
-  code
   age
-  stow
-  zsh
+  osv-scanner
 )
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  echo "Detected Debian-based Linux. Installing packages with apt..."
-  sudo apt update
-  sudo apt install apt-transport-https gpg wget
+case "$OS" in
+  ubuntu|debian)
+    echo "Installing on $OS..."
+    
+    # Remove osv-scanner from packages list for manual installation
+    PACKAGES=("${PACKAGES[@]/osv-scanner}")
+    
+    # osv-scanner https://github.com/google/osv-scanner/releases
+    if ! command_exists osv-scanner; then
+      echo "osv-scanner: installing manually..."
+      curl -L https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_linux_amd64 -o osv-scanner_linux_amd64
+      curl -L https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_SHA256SUMS -o osv-scanner_SHA256SUMS
+      sha256sum -c osv-scanner_SHA256SUMS --ignore-missing || { echo "Checksum verification failed!"; rm osv-scanner_linux_amd64 osv-scanner_SHA256SUMS; exit 1; }
+      chmod +x osv-scanner_linux_amd64
+      sudo mv osv-scanner_linux_amd64 /usr/local/bin/osv-scanner
+      rm osv-scanner_SHA256SUMS
+    else
+      echo "osv-scanner: is already installed."
+    fi
+    ;;
 
-  # Check if running in WSL
-  if [[ -n "$WSL_DISTRO_NAME" ]]; then
-    echo "Running in WSL. Skipping VS Code installation..."
-    PACKAGES=("${PACKAGES[@]/code}")
-  else
-    # vscode https://code.visualstudio.com/docs/setup/linux#_debian-and-ubuntu-based-distributions
-    wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-    sudo install -D -o root -g root -m 644 packages.microsoft.gpg /etc/apt/keyrings/packages.microsoft.gpg
-    echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" |sudo tee /etc/apt/sources.list.d/vscode.list > /dev/null
-    rm packages.microsoft.gpg
-  fi
-  
-  sudo apt update
-  for package in "${PACKAGES[@]}"; do
-    echo "Installing $package..."
-    sudo apt install -y "$package" || echo "$package installation failed or is already installed."
-  done
+  macos)
+    echo "Installing on macos..."
+    ;;
 
-  # Install osv-scanner
-  echo "Installing osv-scanner..."
-  curl -L https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_linux_amd64 -o osv-scanner_linux_amd64
-  curl -L https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_SHA256SUMS -o osv-scanner_SHA256SUMS
-  sha256sum -c osv-scanner_SHA256SUMS --ignore-missing 
-  chmod +x osv-scanner_linux_amd64
-  sudo mv osv-scanner_linux_amd64 /usr/local/bin/osv-scanner
-  rm osv-scanner_SHA256SUMS
+  *)
+    echo "Installing on $OS..."
+    exit 1
+    ;;
+esac
 
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-  echo "Detected macOS. Installing packages with Homebrew..."
-  
-  for package in "${PACKAGES[@]}"; do
-    echo "Installing $package..."
-    brew install "$package" || echo "$package is already installed or failed."
-  done
-
-  # Install osv-scanner
-  echo "Installing osv-scanner..."
-  brew install osv-scanner
-
-else
-  echo "Unsupported OS: $OSTYPE"
-  exit 1
-fi
+install_packages "${PACKAGES[@]}"
