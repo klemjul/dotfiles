@@ -1,11 +1,10 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 source utils.sh
 
 OS=$(detect_os)
 DOTFILES_HOME="$HOME/.dotfiles"
-ls $DOTFILES_HOME
 
 
 # Install Homebrew on macOS if not present
