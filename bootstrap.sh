@@ -39,17 +39,44 @@ if [ ! -e "$HOME/.oh-my-zsh" ]; then
     # delete generated configuration
     rm "$HOME/.zshrc"
     stow zsh
-
-    # oh my zsh plugins
-    git clone https://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
 else
     echo "Oh My Zsh is already installed."
 fi
 
+# install zsh-autosuggestions plugin https://github.com/zsh-users/zsh-autosuggestions/tree/master
+if [ ! -f "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh" ]; then
+    echo "Install zsh-autosuggestions plugin from package manager..."
+    install_packages zsh-autosuggestions
+    
+    if [ "$OS" = "macos" ]; then
+        ZSH_AUTOSUGGESTIONS_PATH="$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    else
+        ZSH_AUTOSUGGESTIONS_PATH="/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    fi
+    
+    mkdir -p "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+    ln -s "$ZSH_AUTOSUGGESTIONS_PATH" "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+    # shellcheck disable=SC2016
+    echo 'source ${0:A:h}/zsh-autosuggestions.zsh' >> "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh"
+else
+    echo "zsh-autosuggestions plugin is already configured."
+fi
+
+
 # install mise
 if [ ! -e "$HOME/.local/bin/mise" ]; then
-    echo "Mise is not installed. Installing..."
+    echo "Mise is not installed. Installing from package manager..."
     curl https://mise.run | sh
+
+    if [ "$OS" = "debian" ] || [ "$OS" = "ubuntu" ]; then
+        sudo apt update -y && sudo apt install -y curl
+        sudo install -dm 755 /etc/apt/keyrings
+        curl -fSs https://mise.jdx.dev/gpg-key.pub | sudo tee /etc/apt/keyrings/mise-archive-keyring.pub 1> /dev/null
+        echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+    fi
+
+    install_packages mise
+
     printf "\n%s\n" "# ===== MISE =====" >> "$DOTFILES_HOME/zsh/.zshrc"
     eval "$HOME/.local/bin/mise activate zsh" >> "$DOTFILES_HOME/zsh/.zshrc"
 else
