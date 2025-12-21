@@ -84,7 +84,8 @@ fi
 echo ""
 
 echo "Mise Setup:"
-validate_file "$HOME/.local/bin/mise" "Mise binary"
+MISE_PATH=$(command -v mise)
+validate_file "$MISE_PATH" "Mise binary"
 if grep -q "mise" "$HOME/.zshrc" 2>/dev/null; then
     echo -e "${GREEN}✓${NC} Mise is configured in .zshrc"
     ((PASSED++))
