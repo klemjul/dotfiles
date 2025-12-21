@@ -65,21 +65,21 @@ fi
 
 
 # install mise
-if [ ! -e "$HOME/.local/bin/mise" ]; then
+if ! command_exists mise; then
     echo "Mise is not installed. Installing from package manager..."
-    curl https://mise.run | sh
 
     if [ "$OS" = "debian" ] || [ "$OS" = "ubuntu" ]; then
-        sudo apt update -y && sudo apt install -y curl
+        ARCH=$(dpkg --print-architecture)
         sudo install -dm 755 /etc/apt/keyrings
         curl -fSs https://mise.jdx.dev/gpg-key.pub | sudo tee /etc/apt/keyrings/mise-archive-keyring.pub 1> /dev/null
-        echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=amd64] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
+        echo "deb [signed-by=/etc/apt/keyrings/mise-archive-keyring.pub arch=$ARCH] https://mise.jdx.dev/deb stable main" | sudo tee /etc/apt/sources.list.d/mise.list
     fi
 
     install_packages mise
 
+    MISE_PATH=$(command -v mise)
     printf "\n%s\n" "# ===== MISE =====" >> "$DOTFILES_HOME/zsh/.zshrc"
-    eval "$HOME/.local/bin/mise activate zsh" >> "$DOTFILES_HOME/zsh/.zshrc"
+    eval "$MISE_PATH activate zsh" >> "$DOTFILES_HOME/zsh/.zshrc"
 else
     echo "Mise is already installed."
 fi
