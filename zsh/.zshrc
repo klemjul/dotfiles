@@ -22,7 +22,7 @@ alias agent-dev='docker run -it --rm \
   -e OPENCODE_API_KEY="$OPENCODE_API_KEY" \
   -v $(pwd):/workspace \
   -w /workspace \
-  agent-dev \
+  opencode-agent-dev \
   opencode
 '
 alias agent-dev-shell='
