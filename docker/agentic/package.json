@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "opencode-ai": "^1.17.7",
+    "skills": "^1.5.11"
+  }
+}
