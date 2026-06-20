@@ -24,6 +24,9 @@ jobs:
       - name: Install tools
         run: cd ~/.dotfiles && bash mise-tasks/install-tools
 
+      - name: Install languages
+        run: cd ~/.dotfiles && bash mise-tasks/install-languages
+
       - name: Validate installation
         run: cd ~/.dotfiles && bash validate.sh
 
@@ -43,6 +46,9 @@ jobs:
 
       - name: Install tools
         run: cd ~/.dotfiles && bash mise-tasks/install-tools
+
+      - name: Install languages
+        run: cd ~/.dotfiles && bash mise-tasks/install-languages
 
       - name: Validate installation
         run: cd ~/.dotfiles && bash validate.sh
