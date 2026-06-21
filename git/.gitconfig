@@ -1,7 +1,7 @@
 [github]
 	user = klemjul
 [user]
-	email = barberisclementpro@gmail.com
+	email = 60812459+klemjul@users.noreply.github.com
 	signingkey = ~/.ssh/id_ed25519.pub
 [init]
 	defaultBranch = main
