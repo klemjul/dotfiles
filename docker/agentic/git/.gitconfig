@@ -1,0 +1,12 @@
+[github]
+	user = klemjulbot
+[user]
+	email = 295574898+klemjulbot@users.noreply.github.com
+	name = "Clément BOT"
+	signingkey = ~/.ssh/id_ed25519.pub
+[init]
+	defaultBranch = main
+[commit]
+	gpgSign = true
+[gpg]
+	format = ssh

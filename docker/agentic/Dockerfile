@@ -31,17 +31,17 @@ ENV LC_ALL=en_US.UTF-8
 
 # Non-root user
 RUN groupadd -g ${GID} ${USERNAME} \
- && useradd -m -u ${UID} -g ${GID} \
-      -s /bin/zsh \
-      ${USERNAME} \
- && usermod -aG sudo ${USERNAME} \
- && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
- && chmod 440 /etc/sudoers.d/${USERNAME}
+  && useradd -m -u ${UID} -g ${GID} \
+    -s /bin/zsh \
+    ${USERNAME} \
+  && usermod -aG sudo ${USERNAME} \
+  && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
+  && chmod 440 /etc/sudoers.d/${USERNAME}
 
 # Some basic hardening
 RUN passwd -d ${USERNAME} \
- && chmod 700 /home/${USERNAME} \
- && echo 'umask 027' >> /etc/profile
+  && chmod 700 /home/${USERNAME} \
+  && echo 'umask 027' >> /etc/profile
 
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
@@ -51,11 +51,12 @@ WORKDIR /home/${USERNAME}
 #
 ARG DOTFILES_REF=master
 RUN git clone https://github.com/klemjul/dotfiles.git ~/.dotfiles \
- && cd ~/.dotfiles \
- && git checkout ${DOTFILES_REF} \
- && bash bootstrap.sh \
- && mise run install-tools \
- && mise run install-languages
+  && cd ~/.dotfiles \
+  && git checkout ${DOTFILES_REF} \
+  && bash bootstrap.sh \
+  && mise run install-tools \
+  && mise run install-languages
+COPY git/.gitconfig /home/${USERNAME}/.gitconfig
 
 #
 # Install global npm tools (including opencode, skills) reproducibly via lockfile
@@ -92,5 +93,7 @@ ENV OPENCODE_PORT=4096
 # in case of opencode web is used
 EXPOSE 4096
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
+COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/bin/tini", "--", "/usr/local/bin/docker-entrypoint.sh"]
 CMD ["/bin/zsh"]

@@ -21,11 +21,8 @@ alias agent-dev='docker run -it --rm \
   --name opencode-agent-dev \
   -e OPENCODE_API_KEY="$OPENCODE_API_KEY" \
   -v $(pwd):/workspace \
+  -v ~/.ssh/klemjulbot:/home/developer/.ssh:ro \
   -w /workspace \
-  opencode-agent-dev \
-  opencode
-'
-alias agent-dev-shell='
-  docker exec -it opencode-agent-dev /bin/zsh
+  opencode-agent-dev
 '
 
