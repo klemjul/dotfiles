@@ -35,7 +35,7 @@ RUN groupadd -g ${GID} ${USERNAME} \
     -s /bin/zsh \
     ${USERNAME} \
   && usermod -aG sudo ${USERNAME} \
-  && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
+  && echo "${USERNAME} ALL=(ALL) NOPASSWD: /usr/bin/apt-get, /usr/bin/apt, /usr/bin/dpkg, /usr/bin/install, /usr/bin/tee" > /etc/sudoers.d/${USERNAME} \
   && chmod 440 /etc/sudoers.d/${USERNAME}
 
 # Some basic hardening
@@ -83,6 +83,11 @@ RUN mise x -- skills add https://github.com/vercel-labs/skills \
   --agent opencode \
   --global \
   --yes
+
+#
+# Global opencode configuration
+#
+COPY --chown=${USERNAME}:${USERNAME} opencode.json /home/${USERNAME}/.config/opencode/opencode.json
 
 #
 # Runtime configuration

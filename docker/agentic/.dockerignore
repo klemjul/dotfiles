@@ -1,0 +1,26 @@
+# Environment / secrets
+.env
+.env.*
+*.pem
+*.key
+.ssh/
+secrets/
+credentials/
+
+# Dependencies
+node_modules/
+vendor/
+
+# macOS
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
