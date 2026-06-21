@@ -1,10 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
-source utils.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/utils.sh"
 
 OS=$(detect_os)
-DOTFILES_HOME="$HOME/.dotfiles"
+DOTFILES_HOME="$SCRIPT_DIR"
 
 
 # Install Homebrew on macOS if not present
@@ -20,13 +21,13 @@ fi
 install_packages zsh stow git curl
 
 if [ ! -e "$HOME/.gitconfig" ]; then
-    stow git
+    stow -d "$DOTFILES_HOME" -t "$HOME" git
 else
     echo "$HOME/.gitconfig already present."
 fi
 
 if [ ! -e "$HOME/.npmrc" ]; then
-    stow npm
+    stow -d "$DOTFILES_HOME" -t "$HOME" npm
 else
     echo "$HOME/.npmrc already present."
 fi
@@ -38,7 +39,7 @@ if [ ! -e "$HOME/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
     # delete generated configuration
     rm "$HOME/.zshrc"
-    stow zsh
+    stow -d "$DOTFILES_HOME" -t "$HOME" zsh
 else
     echo "Oh My Zsh is already installed."
 fi

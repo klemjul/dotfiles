@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 #MISE description='Install vscode settings backup'
 
-SETTINGS_BACKUP="./vscode/settings.json"
-EXTENSIONS_BACKUP="./vscode/extensions.json"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SETTINGS_BACKUP="$SCRIPT_DIR/../vscode/settings.json"
+EXTENSIONS_BACKUP="$SCRIPT_DIR/../vscode/extensions.json"
 
 # extensions
 jq -r '.[]' "$EXTENSIONS_BACKUP" | while read -r extension; do
@@ -13,7 +14,7 @@ echo "$EXTENSIONS_BACKUP vscode extensions have been installed."
 
 # settings
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  cp $SETTINGS_BACKUP "$HOME/.config/Code/User/settings.json"
+  cp "$SETTINGS_BACKUP" "$HOME/.config/Code/User/settings.json"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   cp $SETTINGS_BACKUP "$HOME/Library/Application Support/Code/User/settings.json"
 else
