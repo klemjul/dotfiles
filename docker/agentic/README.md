@@ -2,7 +2,7 @@
 
 A Docker image for running the [opencode](https://opencode.ai) agent locally with a pre-configured shell, dotfiles, and global agent skills.
 
-## Building the image
+## Building
 
 ```sh
 docker build -t opencode-agent-dev .
@@ -14,7 +14,7 @@ docker build -t opencode-agent-dev .
 | ------------------ | -------------------------------- |
 | `OPENCODE_API_KEY` | API key used by the opencode CLI |
 
-### Build arguments
+## Build arguments
 
 | Argument       | Default     | Description                                 |
 | -------------- | ----------- | ------------------------------------------- |
@@ -31,13 +31,14 @@ docker build --build-arg DOTFILES_REF=abc1234 -t opencode-agent-dev .
 
 ## Running
 
+> **Linux users:** append `--add-host=host.docker.internal:host-gateway` to `docker run` commands so the container can reach services on the host (e.g., Ollama). This is automatic on macOS and Windows Docker Desktop.
+
 ### Interactive TUI on the current directory
 
 https://opencode.ai/docs/fr/tui/
 
 ```sh
 docker run -it --rm \
-  --name opencode-agent-dev \
   -e OPENCODE_API_KEY="$OPENCODE_API_KEY" \
   -v "$(pwd):/workspace" \
   -w /workspace \
@@ -45,10 +46,13 @@ docker run -it --rm \
   opencode
 ```
 
-### Start a shell in the container
+### Start a shell
 
 ```sh
-docker exec -it opencode-agent-dev /bin/zsh
+docker run -it --rm \
+  -v "$(pwd):/workspace" \
+  -w /workspace \
+  opencode-agent-dev
 ```
 
 ### opencode web
@@ -63,16 +67,31 @@ docker run -d \
   -p 4096:4096 \
   -e OPENCODE_API_KEY="$OPENCODE_API_KEY" \
   -e OPENCODE_SERVER_PASSWORD="$OPENCODE_SERVER_PASSWORD" \
-  -v $(pwd):/workspace \
+  -v "$(pwd):/workspace" \
   -w /workspace \
   opencode-agent-dev \
-  opencode web --hostname 0.0.0.0 --port 4096
+  opencode web --hostname 0.0.0.0
 ```
 
-### attach TUI to the opencode server
+### Attach TUI to the web server
 
 https://opencode.ai/docs/web/#attacher-un-terminal
 
 ```sh
 docker exec -it opencode-agent-dev sh -c 'opencode attach localhost:4096'
 ```
+
+## Ollama support
+
+Ollama is pre-configured in `opencode.json` to reach the host at `http://host.docker.internal:11434`. To use it:
+
+1. **Expose Ollama on the host** so it accepts connections from Docker. By default Ollama binds to `127.0.0.1` only.
+
+2. **Run opencode with an Ollama model:**
+   ```sh
+   docker run -it --rm \
+     -v "$(pwd):/workspace" \
+     -w /workspace \
+     opencode-agent-dev \
+     opencode --model ollama/qwen3-coder:30b
+   ```

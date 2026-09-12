@@ -5,6 +5,21 @@
   "server": {
     "port": 4096
   },
-  "enabled_providers": ["opencode-go"],
+  "enabled_providers": ["opencode-go", "ollama", "anthropic"],
+  "provider": {
+    "ollama": {
+      "options": {
+        "baseURL": "http://host.docker.internal:11434/v1"
+      },
+      "models": {
+        "qwen3-coder:30b": {
+          "name": "qwen3-coder:30b"
+        },
+        "gemma4:26b": {
+          "name": "gemma4:26b"
+        }
+      }
+    }
+  },
   "share": "disabled"
 }
