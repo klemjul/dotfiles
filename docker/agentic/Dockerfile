@@ -73,17 +73,10 @@ WORKDIR /home/${USERNAME}
 # Global Skills
 #
 RUN mise x -- skills add https://github.com/mattpocock/skills \
-  --skill writing-great-skills \
+  --skill writing-for-agents \
   --agent opencode \
   --global \
   --yes
-
-RUN mise x -- skills add https://github.com/vercel-labs/skills \
-  --skill find-skills \
-  --agent opencode \
-  --global \
-  --yes
-
 #
 # Global opencode configuration
 #
