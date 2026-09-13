@@ -21,5 +21,11 @@
       }
     }
   },
+  "permission": {
+    "*": "ask",
+    "read": "allow",
+    "glob": "allow",
+    "grep": "allow"
+  },
   "share": "disabled"
 }
